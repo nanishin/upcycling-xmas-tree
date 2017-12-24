@@ -1,0 +1,21 @@
+#!/bin/bash
+
+export TZ='Asia/Seoul'
+
+/usr/bin/audio.sh
+
+CHECK_SUPERVISORD=`ps -ef | grep supervisord | grep -v 'grep' | awk '{print $4}'`
+if [[ $CHECK_SUPERVISORD != "{supervisord}" ]]
+then
+    /usr/bin/supervisord &
+fi
+
+while true; do
+	ntpdate time.google.com
+
+	echo "sleep for 60 seconds..."
+	sleep 60
+done
+
+timestamp=`date +%Y-%m-%d_%H%M%S`
+echo "$timestamp : loop is broken!!! upcycling-xmas-tree container will be terminated" >> /var/log/upcycling_xmas_tree_service.log
